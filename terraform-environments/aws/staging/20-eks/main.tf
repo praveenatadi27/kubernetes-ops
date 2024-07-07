@@ -81,17 +81,11 @@ module "eks" {
   ]
 
   # Add whatever roles and users you want to access your cluster
-  map_roles = [
-    {
-      rolearn  = "arn:aws:iam::66666666666:role/role1"
-      username = "role1"
-      groups   = ["system:masters"]
-    },
-  ]
+
   map_users = [
     {
-      userarn  = "arn:aws:iam::725654443526:user/username"
-      username = "username"
+      userarn  = "arn:aws:iam::339712713896:user/sample-user"
+      username = "sample-user"
       groups   = ["system:masters"]
     },
   ]
