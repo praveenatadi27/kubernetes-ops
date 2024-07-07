@@ -87,7 +87,7 @@ module "eks" {
       userarn  = "arn:aws:iam::339712713896:user/sample-user"
       username = "sample_user"
       groups   = ["system:masters"]
-    }
+    },
   ]
 
   node_groups = {
