@@ -50,7 +50,7 @@ data "terraform_remote_state" "vpc" {
 # EKS
 #
 module "eks" {
-  source = "github.com/ManagedKube/kubernetes-ops//terraform-modules/aws/eks?ref=v2.0.92"
+  source = "github.com/ManagedKube/kubernetes-ops//terraform-modules/aws/eks?ref=v1.0.30"
 
   aws_region = local.aws_region
   tags       = local.tags
@@ -72,27 +72,40 @@ module "eks" {
 
   # private cluster - kubernetes API is internal the the VPC
   cluster_endpoint_private_access                = true
-  
-  # Add whatever roles and users you want to access your cluster
+  cluster_create_endpoint_private_access_sg_rule = true
+  cluster_endpoint_private_access_cidrs = [
+    "10.0.0.0/8",
+    "172.16.0.0/12",
+    "192.168.0.0/16",
+    "100.64.0.0/16",
+  ]
 
-  aws_auth_users = [
+  # Add whatever roles and users you want to access your cluster
+  map_roles = [
     {
-      userarn  = "arn:aws:iam::339712713896:user/sample-user"
-      username = "sample_user"
+      rolearn  = "arn:aws:iam::66666666666:role/role1"
+      username = "role1"
+      groups   = ["system:masters"]
+    },
+  ]
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::725654443526:user/username"
+      username = "username"
       groups   = ["system:masters"]
     },
   ]
 
-  eks_managed_node_groups = {
+  node_groups = {
     ng1 = {
-      version         = "1.20"
-      disk_size       = 20
-      desired_size    = 2
-      max_size        = 4
-      min_size        = 1
-      instance_types  = ["t3.small"]
-      additional_tags = local.tags
-      k8s_labels      = {}
+      version          = "1.20"
+      disk_size        = 20
+      desired_capacity = 2
+      max_capacity     = 4
+      min_capacity     = 1
+      instance_types   = ["t3.small"]
+      additional_tags  = local.tags
+      k8s_labels       = {}
     }
   }
 }
