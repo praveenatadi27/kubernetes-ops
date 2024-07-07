@@ -113,7 +113,6 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: ${{matrix.tf_config}}
-        if: github.event_name == 'pull_request'
         run: terraform plan -no-color
         continue-on-error: true
 
